@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #282c34;
+    color: rgb(231, 144, 62);
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.header nav button {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #61dafb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header nav button:hover {
+    background-color: #21a1f1;
+}
