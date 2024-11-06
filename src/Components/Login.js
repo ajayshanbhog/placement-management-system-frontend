@@ -42,6 +42,11 @@ const Login = () => {
             // Store the username and userType in localStorage
             localStorage.setItem('username', userType === 'student' ? srn : email);
             localStorage.setItem('userType', userType);
+
+            if (userType === 'faculty' && response.data.user_id) {
+                localStorage.setItem('facultyUserId', response.data.user_id); // Store user_id for faculty
+            }
+            
             navigate('/dashboard'); // Redirect to the dashboard
         } catch (error) {
             setMessage(error.response?.data.message || 'Login Unsuccessful');

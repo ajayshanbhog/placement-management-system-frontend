@@ -6,7 +6,8 @@ import Home from './Components/Home';
 import Login from './Components/Login';
 import Register from './Components/Register';
 import Dashboard from './Components/Dashboard';
-//import ProtectedRoute from './Components/ProtectedRoute';
+import CompanyDashboard from './Components/dashboards/CompanyDashboards';
+import FacultyDashboard from './Components/dashboards/FacultyDashboard';
 import './App.css';
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/dashboard/company" element={<CompanyDashboard />} />
+                    <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
                 </Routes>
             </div>
             <Footer />
