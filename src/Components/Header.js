@@ -16,7 +16,7 @@ const Header = () => {
 
     return (
         <header className="header">
-            <h1>PMS</h1>
+            <h1>PESU</h1>
             <nav>
                 {isAuthenticated ? (
                     <>

@@ -20,6 +20,7 @@ const Dashboard = () => {
         localStorage.removeItem('userType'); // Clear userType if stored
         localStorage.removeItem('facultyUserId');
         localStorage.removeItem('StudentCGPA');
+        localStorage.removeItem('StudentId');
         navigate('/login'); // Redirect to the login page
     };
 

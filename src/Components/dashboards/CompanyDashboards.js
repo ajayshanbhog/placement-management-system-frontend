@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './CompanyDashboard.css';
 import { useNavigate } from 'react-router-dom';
+import ApplicantsTable from './ApplicantsTable';
+
 
 const CompanyDashboard = () => {
     const [internships, setInternships] = useState([]);
@@ -16,6 +18,7 @@ const CompanyDashboard = () => {
     const navigate = useNavigate();
     const userType = localStorage.getItem('userType');
     const companyId = localStorage.getItem('CompanyId');  // Retrieve CompanyId from localStorage
+    const companyName = localStorage.getItem('username');
 
     const fetchOffers = useCallback(async () => {
         try {
@@ -235,7 +238,13 @@ const CompanyDashboard = () => {
                     ))}
                 </div>
             </div>
+
+            <div>
+            <ApplicantsTable companyId={companyId} companyName={companyName} />
+            </div>
+
         </div>
+        
     );
 };
 

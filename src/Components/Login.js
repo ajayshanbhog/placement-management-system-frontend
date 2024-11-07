@@ -51,8 +51,9 @@ const Login = () => {
                 localStorage.setItem('CompanyId', response.data.user_id); 
             }
 
-            if (userType === 'student' && response.data.user_id) {
+            if (userType === 'student') {
                 localStorage.setItem('StudentCGPA', response.data.student_cgpa); // Store CGPA
+                localStorage.setItem('StudentId', response.data.student_id);
             }
 
             navigate('/dashboard'); // Redirect to the dashboard
