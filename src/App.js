@@ -8,6 +8,7 @@ import Register from './Components/Register';
 import Dashboard from './Components/Dashboard';
 import CompanyDashboard from './Components/dashboards/CompanyDashboards';
 import FacultyDashboard from './Components/dashboards/FacultyDashboard';
+import StudentDashboard from './Components/dashboards/StudentDashboard';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/dashboard/company" element={<CompanyDashboard />} />
                     <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
+                    <Route path="/dashboard/student" element={<StudentDashboard />} />
                 </Routes>
             </div>
             <Footer />

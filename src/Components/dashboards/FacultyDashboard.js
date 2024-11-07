@@ -8,7 +8,8 @@ const FacultyDashboard = () => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const facultyUserId = localStorage.getItem('facultyUserId');  // Get faculty ID from local storage
-
+    axios.defaults.baseURL = 'http://localhost:8000';
+    
     useEffect(() => {
         const fetchStudents = async () => {
             try {

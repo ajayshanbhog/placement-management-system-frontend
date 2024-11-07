@@ -3,12 +3,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: #282c34;
-    color: rgb(231, 144, 62);
+    background-color: #3a2ea1;
+    color: rgb(204, 83, 35);
 }
 
 .header h1 {
     margin: 0;
+    color: rgb(204, 83, 35);
 }
 
 .header nav button {

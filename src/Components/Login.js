@@ -46,9 +46,17 @@ const Login = () => {
             if (userType === 'faculty' && response.data.user_id) {
                 localStorage.setItem('facultyUserId', response.data.user_id); // Store user_id for faculty
             }
-            
+
+            if (userType === 'company' && response.data.user_id) {
+                localStorage.setItem('CompanyId', response.data.user_id); 
+            }
+
+            if (userType === 'student' && response.data.user_id) {
+                localStorage.setItem('StudentCGPA', response.data.student_cgpa); // Store CGPA
+            }
+
             navigate('/dashboard'); // Redirect to the dashboard
-        } catch (error) {
+        } catch (error) {   
             setMessage(error.response?.data.message || 'Login Unsuccessful');
         }
     };

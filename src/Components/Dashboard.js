@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompanyDashboard from './dashboards/CompanyDashboards';
 import FacultyDashboard from './dashboards/FacultyDashboard'; 
-
+import StudentDashboard from './dashboards/StudentDashboard';
 const Dashboard = () => {
     const navigate = useNavigate();
     const username = localStorage.getItem('username');
@@ -18,6 +18,8 @@ const Dashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('username'); // Clear username from local storage
         localStorage.removeItem('userType'); // Clear userType if stored
+        localStorage.removeItem('facultyUserId');
+        localStorage.removeItem('StudentCGPA');
         navigate('/login'); // Redirect to the login page
     };
 
@@ -38,7 +40,14 @@ const Dashboard = () => {
             {userType === 'faculty' ? (
                 <FacultyDashboard /> 
             ) : (
-                <p>This is faculty </p>
+                <> </>
+            )}
+
+            {/* Conditionally render CompanyDashboard if userType is 'company' */}
+            {userType === 'student' ? (
+                <StudentDashboard /> 
+            ) : (
+               <></>
             )}
 
             <button onClick={handleLogout}>Logout</button>

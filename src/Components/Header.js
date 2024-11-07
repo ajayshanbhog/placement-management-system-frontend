@@ -7,7 +7,10 @@ const Header = () => {
     const isAuthenticated = !!localStorage.getItem('username');
 
     const handleLogout = () => {
-        localStorage.removeItem('username'); // Clear the user from local storage
+        localStorage.removeItem('username'); // Clear username from local storage
+        localStorage.removeItem('userType'); // Clear userType if stored
+        localStorage.removeItem('facultyUserId');
+        localStorage.removeItem('StudentCGPA');
         navigate('/login'); // Redirect to the login page
     };
 
