@@ -9,6 +9,7 @@ import Dashboard from './Components/Dashboard';
 import CompanyDashboard from './Components/dashboards/CompanyDashboards';
 import FacultyDashboard from './Components/dashboards/FacultyDashboard';
 import StudentDashboard from './Components/dashboards/StudentDashboard';
+import Profile from './Components/Profile';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/dashboard/company" element={<CompanyDashboard />} />
                     <Route path="/dashboard/faculty" element={<FacultyDashboard />} />
                     <Route path="/dashboard/student" element={<StudentDashboard />} />
+                    <Route path="/dashboard/profileUpdate" element={<Profile />} />
                 </Routes>
             </div>
             <Footer />

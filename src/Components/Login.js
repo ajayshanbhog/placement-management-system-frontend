@@ -45,15 +45,18 @@ const Login = () => {
 
             if (userType === 'faculty' && response.data.user_id) {
                 localStorage.setItem('facultyUserId', response.data.user_id); // Store user_id for faculty
+                localStorage.setItem('userId', response.data.user_id);
             }
 
             if (userType === 'company' && response.data.user_id) {
                 localStorage.setItem('CompanyId', response.data.user_id); 
+                localStorage.setItem('userId', response.data.user_id);
             }
 
             if (userType === 'student') {
                 localStorage.setItem('StudentCGPA', response.data.student_cgpa); // Store CGPA
                 localStorage.setItem('StudentId', response.data.student_id);
+                localStorage.setItem('userId', response.data.student_id);
             }
 
             navigate('/dashboard'); // Redirect to the dashboard

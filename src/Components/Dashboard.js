@@ -15,15 +15,7 @@ const Dashboard = () => {
         }
     }, [username, navigate]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('username'); // Clear username from local storage
-        localStorage.removeItem('userType'); // Clear userType if stored
-        localStorage.removeItem('facultyUserId');
-        localStorage.removeItem('StudentCGPA');
-        localStorage.removeItem('StudentId');
-        navigate('/login'); // Redirect to the login page
-    };
-
+    
     return (
         <div className="dashboard-container">
             <h1>Hello, {username}!</h1>
@@ -51,7 +43,6 @@ const Dashboard = () => {
                <></>
             )}
 
-            <button onClick={handleLogout}>Logout</button>
         </div>
     );
 };

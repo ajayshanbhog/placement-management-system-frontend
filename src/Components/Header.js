@@ -21,6 +21,7 @@ const Header = () => {
                 {isAuthenticated ? (
                     <>
                     <button onClick={() => navigate('/dashboard')}>Dashboard</button>
+                    <button onClick={() => navigate('/dashboard/profileUpdate')}>Edit Profile</button>
                     <button onClick={() => navigate('/')}>Home</button>
                     <button onClick={handleLogout}>Logout</button>
                     
