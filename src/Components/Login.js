@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
-    const [userType, setUserType] = useState('faculty');
+    const [userType, setUserType] = useState('student');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [srn, setSrn] = useState('');
@@ -56,7 +56,7 @@ const Login = () => {
             if (userType === 'student') {
                 localStorage.setItem('StudentCGPA', response.data.student_cgpa); // Store CGPA
                 localStorage.setItem('StudentId', response.data.student_id);
-                localStorage.setItem('userId', response.data.student_id);
+                localStorage.setItem('userId', response.data.user_id);
             }
 
             navigate('/dashboard'); // Redirect to the dashboard
@@ -71,9 +71,11 @@ const Login = () => {
             <form onSubmit={handleLogin}>
                 <label>User Type</label>
                 <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-                    <option value="faculty">Faculty</option>
-                    <option value="company">Company</option>
+
                     <option value="student">Student</option>
+                    <option value="company">Company</option>
+                    <option value="faculty">Faculty</option>
+
                 </select>
 
                 {userType === 'student' ? (

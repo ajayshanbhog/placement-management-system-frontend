@@ -3,24 +3,24 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: #3a2ea1;
+    background-color: #243c72;
     color: rgb(204, 83, 35);
 }
 
 .header h1 {
     margin: 0;
-    color: rgb(204, 83, 35);
+    color: #ec7c1c;
 }
 
 .header nav button {
     margin-left: 1rem;
     padding: 0.5rem 1rem;
-    background-color: #61dafb;
+    background-color: #ec7c1c;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .header nav button:hover {
-    background-color: #21a1f1;
+    background-color: #e06f0b;
 }

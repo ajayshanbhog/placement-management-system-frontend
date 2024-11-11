@@ -1,0 +1,11 @@
+/* ApplicantsTable.css */
+.ag-theme-alpine {
+    height: 400px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.applicants-table h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}

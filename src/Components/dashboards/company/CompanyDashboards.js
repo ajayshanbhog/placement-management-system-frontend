@@ -3,6 +3,7 @@ import axios from 'axios';
 import './CompanyDashboard.css';
 import { useNavigate } from 'react-router-dom';
 import ApplicantsTable from './ApplicantsTable';
+import ApplicantsTableUsingAg from './ApplicantsTableUsingAg';
 
 
 const CompanyDashboard = () => {
@@ -12,8 +13,18 @@ const CompanyDashboard = () => {
     const [fullTimeForm, setFullTimeForm] = useState({ job_title: '', location: '', package: '', cutoff: '' });
     const [editInternshipId, setEditInternshipId] = useState(null);
     const [editFullTimeJobId, setEditFullTimeJobId] = useState(null);
+    const [showRoundModal, setShowRoundModal] = useState(false);
+    const [selectedOffer, setSelectedOffer] = useState(null);
+    const [roundForm, setRoundForm] = useState({
+        round_no: '',
+        round_name: '',
+        date: '',
+        time_scheduled: '',
+        status: 'Scheduled'
+    });
 
     axios.defaults.baseURL = 'http://localhost:8000';
+
 
     const navigate = useNavigate();
     const userType = localStorage.getItem('userType');
@@ -39,6 +50,69 @@ const CompanyDashboard = () => {
     }, [userType, navigate, fetchOffers]);
 
     
+
+
+
+    //For Rounds 
+
+    const openRoundModal = (offer, type, offerId) => {
+        setSelectedOffer({ ...offer, type });
+        localStorage.setItem('offersId', offerId);
+        setShowRoundModal(true);
+    };
+
+    const closeRoundModal = () => {
+        setShowRoundModal(false);
+        setSelectedOffer(null);
+        setRoundForm({ round_no: '', round_name: '', date: '', time_scheduled: '', status: 'Scheduled' });
+    };
+
+    const handleRoundInputChange = (e) => {
+        const { name, value } = e.target;
+        setRoundForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleCreateRound = async () => {
+
+
+        const { id: offerId, type } = selectedOffer;
+        const offersId = parseInt(localStorage.getItem('offersId'),10);
+
+        const endpoint = type === 'Internship' ? `/api/create/round/` : `/api/create/round/`;
+        const data = {
+            company_id: companyId,
+            round_no: roundForm.round_no,
+            round_name: roundForm.round_name,
+            date: roundForm.date,
+            time_scheduled: roundForm.time_scheduled,
+            status: roundForm.status,
+            type,
+            internship_id: type === 'Internship' ? offersId : null,
+            job_id: type === 'FullTime' ? offersId : null,
+        };
+
+        try {
+            await axios.post(endpoint, data);
+            closeRoundModal();
+            fetchOffers();
+        } catch (error) {
+            console.error('Error creating round:', error);
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const handleInputChange = (e, formType) => {
         const { name, value, type, checked } = e.target;
         const updatedValue = type === 'checkbox' ? checked : value;
@@ -66,44 +140,7 @@ const CompanyDashboard = () => {
         }
     };
 
-    const handleDelete = async (type, id) => {
-        if (!id) {
-            console.error('Delete failed: Invalid ID');
-            return;
-        }
-
-        try {
-            await axios.delete(`/api/${type}/${id}/`);
-            fetchOffers();
-        } catch (error) {
-            console.error('Error deleting data:', error);
-        }
-    };
-
-    const handleEdit = (type, id) => {
-        if (type === 'internship') {
-            setEditInternshipId(id);
-            const internshipToEdit = internships.find((internship) => internship.id === id);
-            setInternshipForm({
-                name: internshipToEdit.name,
-                location: internshipToEdit.location,
-                stipend: internshipToEdit.stipend,
-                ppo: internshipToEdit.ppo,
-                type: internshipToEdit.type,
-                duration: internshipToEdit.duration,
-                cutoff: internshipToEdit.cutoff,
-            });
-        } else if (type === 'fulltime') {
-            setEditFullTimeJobId(id);
-            const jobToEdit = fullTimeJobs.find((job) => job.id === id);
-            setFullTimeForm({
-                job_title: jobToEdit.job_title,
-                location: jobToEdit.location,
-                package: jobToEdit.package,
-                cutoff: jobToEdit.cutoff,
-            });
-        }
-    };
+    
 
     return (
         <div className="company-dashboard">
@@ -207,19 +244,19 @@ const CompanyDashboard = () => {
                 </div>
             </div>
 
+            
             <div className="offers-container">
                 <div className="offer-section">
                     <h2>Internship Offers</h2>
                     {internships.map((internship) => (
-                        <div key={internship.id} className="offer">
+                        <div key={internship.internship_id} className="offer">
                             <h3>{internship.name}</h3>
                             <p>Location: {internship.location}</p>
                             <p>Stipend: {internship.stipend}</p>
                             <p>Type: {internship.type}</p>
                             <p>Duration: {internship.duration} months</p>
                             <p>Cutoff CGPA: {internship.cutoff}</p>
-                            <button onClick={() => handleEdit('internship', internship.id)}>Edit</button>
-                            <button onClick={() => handleDelete('internship', internship.id)}>Delete</button>
+                            <button onClick={() => openRoundModal(internship, 'Internship',internship.internship_id)}>Add Round</button>
                         </div>
                     ))}
                 </div>
@@ -227,21 +264,79 @@ const CompanyDashboard = () => {
                 <div className="offer-section">
                     <h2>Full-Time Jobs</h2>
                     {fullTimeJobs.map((job) => (
-                        <div key={job.id} className="offer">
+                        <div key={job.job_id} className="offer">
                             <h3>{job.job_title}</h3>
                             <p>Location: {job.location}</p>
                             <p>Package: {job.package}</p>
                             <p>Cutoff CGPA: {job.cutoff}</p>
-                            <button onClick={() => handleEdit('fulltime', job.id)}>Edit</button>
-                            <button onClick={() => handleDelete('fulltime', job.id)}>Delete</button>
+                            <button onClick={() => openRoundModal(job, 'FullTime',job.job_id)}>Add Round</button>
                         </div>
                     ))}
                 </div>
             </div>
 
+            {showRoundModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Add Round for {selectedOffer.type === 'Internship' ? selectedOffer.name : selectedOffer.job_title}</h2>
+                        <form>
+                            <input
+                                type="number"
+                                name="round_no"
+                                placeholder="Round Number"
+                                value={roundForm.round_no}
+                                onChange={handleRoundInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="round_name"
+                                placeholder="Round Name"
+                                value={roundForm.round_name}
+                                onChange={handleRoundInputChange}
+                            />
+                            <input
+                                type="date"
+                                name="date"
+                                placeholder="Date"
+                                value={roundForm.date}
+                                onChange={handleRoundInputChange}
+                            />
+                            <input
+                                type="time"
+                                name="time_scheduled"
+                                placeholder="Time Scheduled"
+                                value={roundForm.time_scheduled}
+                                onChange={handleRoundInputChange}
+                            />
+                            <select
+                                name="status"
+                                value={roundForm.status}
+                                onChange={handleRoundInputChange}
+                            >
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <button type="button" onClick={handleCreateRound}>Create Round</button>
+                            <button type="button" onClick={closeRoundModal}>Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            <div>
+
+            <ApplicantsTableUsingAg companyId={companyId} companyName={companyName} />
+            <br></br>
+            <br></br>
+            <br></br>
+            </div>
+
             <div>
             <ApplicantsTable companyId={companyId} companyName={companyName} />
             </div>
+
+            
 
         </div>
         

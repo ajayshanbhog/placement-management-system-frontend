@@ -40,7 +40,7 @@ const ApplicantsTable = ({ companyId,companyName }) => {
                                 <td>{applicant.student.cgpa}</td>
                                 <td>{applicant.student.SRN}</td>
                                 <td>{applicant.student.email}</td>
-                                <td>{applicant.internship ? applicant.internship.name : applicant.job ? applicant.job.job_title : 'N/A'}</td>
+                                <td>{applicant.type === 'Internship' ? applicant.internship.name : applicant.job.name}</td>
                                 <td>{applicant.type}</td>
                                 <td>{applicant.student.faculty_advisor}</td>
                             </tr>

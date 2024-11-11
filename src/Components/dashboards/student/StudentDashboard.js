@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './StudentDashboard.css';
+import RoundsStudentsTable from './RoundsStudentsTable';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 
@@ -11,6 +12,7 @@ const StudentDashboard = () => {
     const [appliedFulltimeJobs, setAppliedFulltimeJobs] = useState(new Set()); // Track applied full-time jobs
     const username = localStorage.getItem('username');
     const student_id = localStorage.getItem('StudentId');
+    const user_id = localStorage.getItem('userId');
 
     // Fetch internships and full-time jobs
     useEffect(() => {
@@ -181,6 +183,12 @@ const StudentDashboard = () => {
                     )}
                 </tbody>
             </table>
+
+            <div>
+            <h1>Rounds</h1>
+            <RoundsStudentsTable studentId={user_id} />
+            </div>
+
         </div>
     );
 };
