@@ -4,7 +4,7 @@ import TypingErasingEffect from './TypingEffect';
 
 const Home = () => {
     return (
-        <div className="home">
+        <div className="home" >
             <h2><TypingErasingEffect 
           text="Welcome to PES University Placement Management System !" 
           speed={50} 

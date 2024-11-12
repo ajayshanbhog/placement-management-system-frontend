@@ -186,7 +186,7 @@ const StudentDashboard = () => {
 
             <div>
             <h1>Rounds</h1>
-            <RoundsStudentsTable studentId={user_id} />
+            <RoundsStudentsTable studentId={student_id} />
             </div>
 
         </div>

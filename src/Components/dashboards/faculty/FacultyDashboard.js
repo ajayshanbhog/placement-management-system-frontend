@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './FacultyDashboard.css';
+import ResultTable from './ResultTable';
 
 const FacultyDashboard = () => {
     const [students, setStudents] = useState([]);
@@ -29,8 +30,10 @@ const FacultyDashboard = () => {
 
     return (
         <div className="faculty-dashboard">
+            
+            
             <h1>Faculty Dashboard</h1>
-            <h2>Students List</h2>
+            <h2>List of Mentee</h2>
             <div className="students-container">
                 {students.length > 0 ? (
                     students.map(student => (
@@ -49,6 +52,10 @@ const FacultyDashboard = () => {
                     <p>No students assigned to this faculty.</p>
                 )}
             </div>
+            <div className="App">
+                <ResultTable facultyId={facultyUserId} />
+            </div>
+            
         </div>
     );
 };

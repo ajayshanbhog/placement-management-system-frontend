@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import './CompanyDashboard.css';
 import { useNavigate } from 'react-router-dom';
 import ApplicantsTable from './ApplicantsTable';
 import ApplicantsTableUsingAg from './ApplicantsTableUsingAg';
-
+import CompanyRounds from './CompanyRounds';
 
 const CompanyDashboard = () => {
     const [internships, setInternships] = useState([]);
@@ -15,6 +15,21 @@ const CompanyDashboard = () => {
     const [editFullTimeJobId, setEditFullTimeJobId] = useState(null);
     const [showRoundModal, setShowRoundModal] = useState(false);
     const [selectedOffer, setSelectedOffer] = useState(null);
+
+
+
+    // This is for compressed or long format
+    const [expandedInternshipId, setExpandedInternshipId] = useState(null);
+    const [expandedJobId, setExpandedJobId] = useState(null);
+
+    const toggleExpandInternship = (internshipId) => {
+        setExpandedInternshipId(expandedInternshipId === internshipId ? null : internshipId);
+    };
+
+    const toggleExpandJob = (jobId) => {
+        setExpandedJobId(expandedJobId === jobId ? null : jobId);
+    };
+
     const [roundForm, setRoundForm] = useState({
         round_no: '',
         round_name: '',
@@ -58,6 +73,7 @@ const CompanyDashboard = () => {
     const openRoundModal = (offer, type, offerId) => {
         setSelectedOffer({ ...offer, type });
         localStorage.setItem('offersId', offerId);
+        localStorage.setItem('offersType',type);
         setShowRoundModal(true);
     };
 
@@ -65,6 +81,7 @@ const CompanyDashboard = () => {
         setShowRoundModal(false);
         setSelectedOffer(null);
         setRoundForm({ round_no: '', round_name: '', date: '', time_scheduled: '', status: 'Scheduled' });
+        
     };
 
     const handleRoundInputChange = (e) => {
@@ -95,6 +112,7 @@ const CompanyDashboard = () => {
             await axios.post(endpoint, data);
             closeRoundModal();
             fetchOffers();
+            //window.location.reload();
         } catch (error) {
             console.error('Error creating round:', error);
         }
@@ -102,7 +120,7 @@ const CompanyDashboard = () => {
 
 
 
-
+        
 
 
 
@@ -140,7 +158,47 @@ const CompanyDashboard = () => {
         }
     };
 
+
+
     
+    const handleFulltimeDelete = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/fulltime-operation/${id}/`, {
+                method: 'DELETE',
+            });
+    
+            if (response.ok) {
+                alert('Record deleted successfully!');
+                fetchOffers(); // Refresh the list after deletion
+            } else {
+                alert('Failed to delete the record.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the record.');
+        }
+    };
+    
+    const handleInternshipDelete = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/internship-operation/${id}/`, {
+                method: 'DELETE',
+            });
+    
+            if (response.ok) {
+                alert('Record deleted successfully!');
+                fetchOffers(); // Refresh the list after deletion
+            } else {
+                alert('Failed to delete the record.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the record.');
+        }
+    };
+    
+
+
 
     return (
         <div className="company-dashboard">
@@ -246,73 +304,34 @@ const CompanyDashboard = () => {
 
             
             <div className="offers-container">
-                <div className="offer-section">
-                    <h2>Internship Offers</h2>
-                    {internships.map((internship) => (
-                        <div key={internship.internship_id} className="offer">
-                            <h3>{internship.name}</h3>
-                            <p>Location: {internship.location}</p>
-                            <p>Stipend: {internship.stipend}</p>
-                            <p>Type: {internship.type}</p>
-                            <p>Duration: {internship.duration} months</p>
-                            <p>Cutoff CGPA: {internship.cutoff}</p>
-                            <button onClick={() => openRoundModal(internship, 'Internship',internship.internship_id)}>Add Round</button>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="offer-section">
-                    <h2>Full-Time Jobs</h2>
-                    {fullTimeJobs.map((job) => (
-                        <div key={job.job_id} className="offer">
-                            <h3>{job.job_title}</h3>
-                            <p>Location: {job.location}</p>
-                            <p>Package: {job.package}</p>
-                            <p>Cutoff CGPA: {job.cutoff}</p>
-                            <button onClick={() => openRoundModal(job, 'FullTime',job.job_id)}>Add Round</button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {showRoundModal && (
+            <div className="offer-section">
+                <h2>Internship Offers</h2>
+                {internships.map((internship) => (
+                    <div
+                        key={internship.internship_id}
+                        className={`offer ${expandedInternshipId === internship.internship_id ? 'expanded' : 'compressed'}`}
+                        onDoubleClick={() => toggleExpandInternship(internship.internship_id)}
+                    >
+                        <h3>{internship.name}</h3>
+                        {expandedInternshipId === internship.internship_id ? (
+                            <>
+                                <p>Location: {internship.location}</p>
+                                <p>Stipend: {internship.stipend}</p>
+                                <p>Type: {internship.type}</p>
+                                <p>Duration: {internship.duration} months</p>
+                                <p>Cutoff CGPA: {internship.cutoff}</p>
+                                <button onClick={() => openRoundModal(internship, 'Internship', internship.internship_id)}>Add Round</button>
+                                <button className="delete-round-button" onClick={(e) => { e.stopPropagation(); handleInternshipDelete(internship.internship_id); }}>Delete</button>
+                                {showRoundModal && (
                 <div className="modal">
                     <div className="modal-content">
                         <h2>Add Round for {selectedOffer.type === 'Internship' ? selectedOffer.name : selectedOffer.job_title}</h2>
                         <form>
-                            <input
-                                type="number"
-                                name="round_no"
-                                placeholder="Round Number"
-                                value={roundForm.round_no}
-                                onChange={handleRoundInputChange}
-                            />
-                            <input
-                                type="text"
-                                name="round_name"
-                                placeholder="Round Name"
-                                value={roundForm.round_name}
-                                onChange={handleRoundInputChange}
-                            />
-                            <input
-                                type="date"
-                                name="date"
-                                placeholder="Date"
-                                value={roundForm.date}
-                                onChange={handleRoundInputChange}
-                            />
-                            <input
-                                type="time"
-                                name="time_scheduled"
-                                placeholder="Time Scheduled"
-                                value={roundForm.time_scheduled}
-                                onChange={handleRoundInputChange}
-                            />
-                            <select
-                                name="status"
-                                value={roundForm.status}
-                                onChange={handleRoundInputChange}
-                            >
+                            <input type="number" name="round_no" placeholder="Round Number" value={roundForm.round_no} onChange={handleRoundInputChange} />
+                            <input type="text" name="round_name" placeholder="Round Name" value={roundForm.round_name} onChange={handleRoundInputChange} />
+                            <input type="date" name="date" placeholder="Date" value={roundForm.date} onChange={handleRoundInputChange} />
+                            <input type="time" name="time_scheduled" placeholder="Time Scheduled" value={roundForm.time_scheduled} onChange={handleRoundInputChange} />
+                            <select name="status" value={roundForm.status} onChange={handleRoundInputChange}>
                                 <option value="Scheduled">Scheduled</option>
                                 <option value="Completed">Completed</option>
                                 <option value="Cancelled">Cancelled</option>
@@ -323,18 +342,73 @@ const CompanyDashboard = () => {
                     </div>
                 </div>
             )}
+                                <CompanyRounds companyId={companyId} id={internship.internship_id} />
+                            </>
+                        ) : null}
+                    </div>
+                ))}
+            </div>
+
+            <div className="offer-section">
+                <h2>Full-Time Jobs</h2>
+                {fullTimeJobs.map((job) => (
+                    <div
+                        key={job.job_id}
+                        className={`offer ${expandedJobId === job.job_id ? 'expanded' : 'compressed'}`}
+                        onDoubleClick={() => toggleExpandJob(job.job_id)}
+                    >
+                        <h3>{job.job_title}</h3>
+                        {expandedJobId === job.job_id ? (
+                            <>
+                                <p>Location: {job.location}</p>
+                                <p>Package: {job.package}</p>
+                                <p>Cutoff CGPA: {job.cutoff}</p>
+                                <button onClick={() => openRoundModal(job, 'FullTime', job.job_id)}>Add Round</button>
+                                <button className="delete-round-button" onClick={(e) => { e.stopPropagation(); handleFulltimeDelete(job.job_id); }}>Delete</button>
+                                {showRoundModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Add Round for {selectedOffer.type === 'Internship' ? selectedOffer.name : selectedOffer.job_title}</h2>
+                        <form>
+                            <input type="number" name="round_no" placeholder="Round Number" value={roundForm.round_no} onChange={handleRoundInputChange} />
+                            <input type="text" name="round_name" placeholder="Round Name" value={roundForm.round_name} onChange={handleRoundInputChange} />
+                            <input type="date" name="date" placeholder="Date" value={roundForm.date} onChange={handleRoundInputChange} />
+                            <input type="time" name="time_scheduled" placeholder="Time Scheduled" value={roundForm.time_scheduled} onChange={handleRoundInputChange} />
+                            <select name="status" value={roundForm.status} onChange={handleRoundInputChange}>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <button type="button" onClick={handleCreateRound}>Create Round</button>
+                            <button type="button" onClick={closeRoundModal}>Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+                                <CompanyRounds companyId={companyId} id={job.job_id} />
+                            </>
+                        ) : null}
+                    </div>
+                ))}
+            </div>
+        </div>
+
+            
 
             <div>
 
+
+            <div>
+            <ApplicantsTable companyId={companyId} companyName={companyName} />
+            </div>
+                
             <ApplicantsTableUsingAg companyId={companyId} companyName={companyName} />
             <br></br>
             <br></br>
             <br></br>
             </div>
 
-            <div>
-            <ApplicantsTable companyId={companyId} companyName={companyName} />
-            </div>
+            
 
             
 

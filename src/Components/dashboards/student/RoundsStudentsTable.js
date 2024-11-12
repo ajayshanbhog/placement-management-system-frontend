@@ -68,7 +68,7 @@ const RoundsStudentsTable = ({ studentId }) => {
                     {jobRounds.map((round) => (
                         <tr key={round.round_id}>
                             <td>{round.company_name}</td>
-                            <td>{round.job_title}</td>
+                            <td>{round.job_name}</td>
                             <td>{round.round_no}</td>
                             <td>{round.round_name}</td>
                             <td>{round.status}</td>
