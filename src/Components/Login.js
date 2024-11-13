@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
@@ -12,6 +12,14 @@ const Login = () => {
     const navigate = useNavigate();
 
     axios.defaults.baseURL = 'http://localhost:8000';
+
+    //Logic for not coming to this component when loged in
+    const username = localStorage.getItem('username');
+    useEffect(() => {
+        if (username) {
+            navigate('/dashboard');
+        }
+    }, [username, navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -46,17 +54,20 @@ const Login = () => {
             if (userType === 'faculty' && response.data.user_id) {
                 localStorage.setItem('facultyUserId', response.data.user_id); // Store user_id for faculty
                 localStorage.setItem('userId', response.data.user_id);
+                localStorage.setItem('name',response.data.name);
             }
 
             if (userType === 'company' && response.data.user_id) {
                 localStorage.setItem('CompanyId', response.data.user_id); 
                 localStorage.setItem('userId', response.data.user_id);
+                localStorage.setItem('name',response.data.name);
             }
 
             if (userType === 'student') {
                 localStorage.setItem('StudentCGPA', response.data.student_cgpa); // Store CGPA
                 localStorage.setItem('StudentId', response.data.student_id);
-                localStorage.setItem('userId', response.data.user_id);
+                localStorage.setItem('userId', response.data.student_id);
+                localStorage.setItem('name',response.data.name);
             }
 
             navigate('/dashboard'); // Redirect to the dashboard

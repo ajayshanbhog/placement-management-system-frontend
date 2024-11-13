@@ -32,7 +32,7 @@ const FacultyDashboard = () => {
         <div className="faculty-dashboard">
             
             
-            <h1>Faculty Dashboard</h1>
+            
             <h2>List of Mentee</h2>
             <div className="students-container">
                 {students.length > 0 ? (

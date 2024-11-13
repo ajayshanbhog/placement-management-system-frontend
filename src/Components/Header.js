@@ -6,11 +6,8 @@ const Header = () => {
     const navigate = useNavigate();
     const isAuthenticated = !!localStorage.getItem('username');
 
-    const handleLogout = () => {
-        localStorage.removeItem('username'); // Clear username from local storage
-        localStorage.removeItem('userType'); // Clear userType if stored
-        localStorage.removeItem('facultyUserId');
-        localStorage.removeItem('StudentCGPA');
+    const handleLogout = () => {  
+        localStorage.clear();
         navigate('/login'); // Redirect to the login page
     };
 

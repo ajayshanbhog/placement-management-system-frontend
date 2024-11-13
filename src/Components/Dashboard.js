@@ -9,6 +9,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const username = localStorage.getItem('username');
     const userType = localStorage.getItem('userType');
+    const name = localStorage.getItem('name');
     
     // Redirect to home if username is not in local storage
     useEffect(() => {
@@ -20,7 +21,7 @@ const Dashboard = () => {
     
     return (
         <div className="dashboard-container">
-            <h1>Hello, {username}!</h1>
+            <h1>Welcome to PESU PMS, {name}!</h1>
 
             {/* Conditionally render CompanyDashboard if userType is 'company' */}
             {userType === 'company' ? (

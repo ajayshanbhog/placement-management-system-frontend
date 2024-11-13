@@ -143,14 +143,35 @@ const CompanyDashboard = () => {
     };
 
     const handleAddOrUpdate = async (type, isUpdate = false, id = null) => {
-        const formData = type === 'internship' ? { ...internshipForm, company: companyId } : { ...fullTimeForm, company: companyId };
+        let formData;
+        let requiredFields;
+        
+        // Set the formData and required fields based on the type (internship or full-time)
+        if (type === 'internship') {
+            formData = { ...internshipForm, company: companyId };
+            requiredFields = ['name', 'location', 'stipend', 'type', 'duration', 'cutoff'];
+        } else {
+            formData = { ...fullTimeForm, company: companyId };
+            requiredFields = ['job_title', 'location', 'package', 'cutoff'];
+        }
+    
+        // Check if all required fields are filled
+        for (let field of requiredFields) {
+            if (!formData[field]) {
+                alert(`Please fill in the ${field} field.`);
+                return; // Skip the API call if any required field is missing
+            }
+        }
+    
+        // Determine the endpoint and HTTP method
         const endpoint = `/api/${type}${isUpdate ? `/${id}` : ''}/`;
         const method = isUpdate ? 'put' : 'post';
-
+    
         try {
+            // Make the API request
             await axios({ method, url: endpoint, data: formData });
-            fetchOffers();
-            // Clear the form after submit
+            fetchOffers(); // Re-fetch the offers after the API call
+            // Clear the form after successful submission
             setInternshipForm({ name: '', location: '', stipend: '', ppo: false, type: '', duration: '', cutoff: '' });
             setFullTimeForm({ job_title: '', location: '', package: '', cutoff: '' });
         } catch (error) {
@@ -162,6 +183,13 @@ const CompanyDashboard = () => {
 
     
     const handleFulltimeDelete = async (id) => {
+        // Ask for confirmation before deleting
+        const isConfirmed = window.confirm("Are you sure you want to delete this record?");
+        
+        if (!isConfirmed) {
+            return; // Exit the function if the user cancels
+        }
+    
         try {
             const response = await fetch(`http://localhost:8000/api/fulltime-operation/${id}/`, {
                 method: 'DELETE',
@@ -180,6 +208,13 @@ const CompanyDashboard = () => {
     };
     
     const handleInternshipDelete = async (id) => {
+        // Ask for confirmation before deleting
+        const isConfirmed = window.confirm("Are you sure you want to delete this record?");
+        
+        if (!isConfirmed) {
+            return; // Exit the function if the user cancels
+        }
+    
         try {
             const response = await fetch(`http://localhost:8000/api/internship-operation/${id}/`, {
                 method: 'DELETE',
@@ -196,13 +231,11 @@ const CompanyDashboard = () => {
             alert('An error occurred while deleting the record.');
         }
     };
-    
-
 
 
     return (
         <div className="company-dashboard">
-            <h1>Company Dashboard</h1>
+            
             <div className="form-container">
                 <div className="form-section">
                     <h2>Manage Internship Offers</h2>
@@ -273,6 +306,7 @@ const CompanyDashboard = () => {
                             placeholder="Job Title"
                             value={fullTimeForm.job_title}
                             onChange={(e) => handleInputChange(e, 'fulltime')}
+                            required
                         />
                         <input
                             type="text"
@@ -280,6 +314,7 @@ const CompanyDashboard = () => {
                             placeholder="Location"
                             value={fullTimeForm.location}
                             onChange={(e) => handleInputChange(e, 'fulltime')}
+                            required
                         />
                         <input
                             type="number"
@@ -343,6 +378,7 @@ const CompanyDashboard = () => {
                 </div>
             )}
                                 <CompanyRounds companyId={companyId} id={internship.internship_id} />
+                                
                             </>
                         ) : null}
                     </div>
@@ -402,10 +438,7 @@ const CompanyDashboard = () => {
             <ApplicantsTable companyId={companyId} companyName={companyName} />
             </div>
                 
-            <ApplicantsTableUsingAg companyId={companyId} companyName={companyName} />
-            <br></br>
-            <br></br>
-            <br></br>
+            <ApplicantsTableUsingAg companyId={companyId} companyName={companyName} />  
             </div>
 
             

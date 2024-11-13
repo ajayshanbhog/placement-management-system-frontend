@@ -5,13 +5,13 @@ import './Profile.css';
 axios.defaults.baseURL = 'http://localhost:8000';
 
 const getApiEndpoint = (userType, userId) => {
+    console.log(userId+" "+userType);
     if (userType === 'faculty') return `/get/faculty/${userId}/`;
     if (userType === 'student') return `/get/student/${userId}/`;
     if (userType === 'company') return `/get/company/${userId}/`;
     return null;
 };
 
-// Update API Endpoint based on userType
 const updateApiEndpoint = (userType, userId) => {
     if (userType === 'faculty') return `/update/faculty/${userId}/`;
     if (userType === 'student') return `/update/student/${userId}/`;
@@ -19,7 +19,6 @@ const updateApiEndpoint = (userType, userId) => {
     return null;
 };
 
-// Profile Component
 const Profile = () => {
     const userType = localStorage.getItem('userType');
     const userId = localStorage.getItem('userId');
@@ -27,7 +26,6 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [isUpdated, setIsUpdated] = useState(false);
 
-    // Fetch profile data on component mount
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -41,7 +39,6 @@ const Profile = () => {
         fetchData();
     }, [userType, userId]);
 
-    // Handle form field changes
     const handleChange = (e) => {
         setProfileData({
             ...profileData,
@@ -49,7 +46,6 @@ const Profile = () => {
         });
     };
 
-    // Handle form submission to update profile
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -73,15 +69,6 @@ const Profile = () => {
                     {/* Faculty Fields */}
                     {userType === 'faculty' && (
                         <>
-                            <div>
-                                <label>Name:</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={profileData.name || ''}
-                                    onChange={handleChange}
-                                />
-                            </div>
                             <div>
                                 <label>Email:</label>
                                 <input
@@ -114,15 +101,6 @@ const Profile = () => {
                     {/* Student Fields */}
                     {userType === 'student' && (
                         <>
-                            <div>
-                                <label>Name:</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={profileData.name || ''}
-                                    onChange={handleChange}
-                                />
-                            </div>
                             <div>
                                 <label>Email:</label>
                                 <input
@@ -165,20 +143,20 @@ const Profile = () => {
                                 />
                             </div>
                             <div>
-                                <label>Location:</label>
-                                <input
-                                    type="text"
-                                    name="location"
-                                    value={profileData.location || ''}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
                                 <label>Type:</label>
                                 <input
                                     type="text"
                                     name="type"
                                     value={profileData.type || ''}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label>Location:</label>
+                                <input
+                                    type="text"
+                                    name="location"
+                                    value={profileData.location || ''}
                                     onChange={handleChange}
                                 />
                             </div>

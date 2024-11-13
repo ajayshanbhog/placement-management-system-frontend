@@ -2,17 +2,35 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './StudentDashboard.css';
 import RoundsStudentsTable from './RoundsStudentsTable';
+import CongratulationsImage from '../../../Assests/congratulations-image.png';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 
 const StudentDashboard = () => {
     const [internships, setInternships] = useState([]);
     const [fulltimeJobs, setFulltimeJobs] = useState([]);
+    const [selectedOffer, setSelectedOffer] = useState(null); // Store selected offer details
+
     const [appliedInternships, setAppliedInternships] = useState(new Set()); // Track applied internships
     const [appliedFulltimeJobs, setAppliedFulltimeJobs] = useState(new Set()); // Track applied full-time jobs
     const username = localStorage.getItem('username');
     const student_id = localStorage.getItem('StudentId');
-    const user_id = localStorage.getItem('userId');
+    
+
+    useEffect(() => {
+        const checkSelectedStatus = async () => {
+            try {
+                const response = await axios.get(`/api/check_selected_status/${student_id}/`);
+                if (response.data.selected) {
+                    setSelectedOffer(response.data);
+                }
+            } catch (error) {
+                console.error("Error checking selected status:", error);
+            }
+        };
+
+        checkSelectedStatus();
+    }, [student_id]);
 
     // Fetch internships and full-time jobs
     useEffect(() => {
@@ -103,9 +121,27 @@ const StudentDashboard = () => {
         }
     };
 
+
+
+
+    // Render congratulations or job/internship tables based on selection status
+    if (selectedOffer) {
+        return (
+            <div className="congratulations">
+                <div className="congratulations-image-container">       
+                    <img src={CongratulationsImage} alt="Logo" className="congratulations-image" />
+                </div>
+                <h2>You have been selected for a {selectedOffer.type} with {selectedOffer.company_name}!</h2>
+                <p>Offer Amount: {selectedOffer.offer_amount}</p>
+            </div>
+        );
+    }
+
+
+
+
     return (
         <div className="student-dashboard">
-            <h1>Student Dashboard</h1>
             <h2>Internship Opportunities</h2>
             <table className="offers-table">
                 <thead>

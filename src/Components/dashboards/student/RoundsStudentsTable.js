@@ -41,7 +41,8 @@ const RoundsStudentsTable = ({ studentId }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {internshipRounds.map((round) => (
+                    { internshipRounds.length > 0 ?(
+                    internshipRounds.map((round) => (
                         <tr key={round.round_id}>
                             <td>{round.company_name}</td>
                             <td>{round.internship_name}</td>
@@ -49,7 +50,12 @@ const RoundsStudentsTable = ({ studentId }) => {
                             <td>{round.round_name}</td>
                             <td>{round.status}</td>
                         </tr>
-                    ))}
+                    ))
+                    ) :(
+                        <tr>
+                            <td colSpan="8">No Rounds are sheduled</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
 
@@ -65,7 +71,8 @@ const RoundsStudentsTable = ({ studentId }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {jobRounds.map((round) => (
+                    { jobRounds.length > 0 ? (
+                    jobRounds.map((round) => (
                         <tr key={round.round_id}>
                             <td>{round.company_name}</td>
                             <td>{round.job_name}</td>
@@ -73,7 +80,12 @@ const RoundsStudentsTable = ({ studentId }) => {
                             <td>{round.round_name}</td>
                             <td>{round.status}</td>
                         </tr>
-                    ))}
+                    ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8">No Rounds are sheduled</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>

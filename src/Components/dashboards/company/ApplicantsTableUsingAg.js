@@ -3,7 +3,7 @@ import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css'; 
 import 'ag-grid-community/styles/ag-theme-alpine.css'; 
-import './ApplicantsTable.css';
+import './ApplicantsTableUsingAg.css';
 
 const ApplicantsTable = ({ companyId, companyName }) => {
     const [applicants, setApplicants] = useState([]);

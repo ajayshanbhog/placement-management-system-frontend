@@ -4,6 +4,7 @@ import './ApplicantsTable.css';
 
 const ApplicantsTable = ({ companyId, companyName }) => {
     const [applicants, setApplicants] = useState([]);
+    const [selectedApplicant, setSelectedApplicant] = useState(null); // Track the selected applicant for each student
 
     useEffect(() => {
         const fetchApplicants = async () => {
@@ -16,11 +17,31 @@ const ApplicantsTable = ({ companyId, companyName }) => {
         };
 
         fetchApplicants();
-    }, [companyId, companyName]);
+    }, [companyId]);
+
+    // Function to fetch the selected status of the current student
+    const checkSelectedStatus = async (studentId) => {
+        try {
+            const response = await axios.get(`http://localhost:8000/api/check_selected_status/${studentId}/`);
+            return response.data.selected;
+        } catch (error) {
+            console.error("Error checking selected status:", error);
+            return false;
+        }
+    };
 
     // Function to toggle the status of an applicant
-    const toggleStatus = async (applicantId, currentStatus) => {
+    const toggleStatus = async (applicantId, currentStatus, studentId) => {
         try {
+            // Check the selected status before toggling
+            const isSelected = await checkSelectedStatus(studentId);
+            
+            if (isSelected && currentStatus !== 'selected') {
+                // If the student is already selected, don't allow changing status to 'notselected'
+                alert("This student has already been selected!");
+                return;
+            }
+
             // Call API to toggle the status
             await axios.put(`http://localhost:8000/api/applicants/toggle-status/${applicantId}/`);
 
@@ -37,12 +58,17 @@ const ApplicantsTable = ({ companyId, companyName }) => {
         }
     };
 
+    // Filter applicants based on selected status
+    const visibleApplicants = selectedApplicant
+        ? applicants.filter(applicant => applicant.status === 'selected')
+        : applicants;
+
     return (
         <div className="applicants-container">
             <h2>Applicants for {companyName}</h2>
             <div className="applicant-cards">
-                {applicants.length > 0 ? (
-                    applicants.map((applicant) => (
+                {visibleApplicants.length > 0 ? (
+                    visibleApplicants.map((applicant) => (
                         <div className="applicant-card" key={applicant.applicant_id}>
                             <div className="card-header">
                                 <h3>{applicant.student.name}</h3>
@@ -50,7 +76,7 @@ const ApplicantsTable = ({ companyId, companyName }) => {
                                 
                                 {/* Toggleable status button */}
                                 <button
-                                    onClick={() => toggleStatus(applicant.applicant_id, applicant.status)}
+                                    onClick={() => toggleStatus(applicant.applicant_id, applicant.status, applicant.student.student_id)}
                                     className={`status-button ${applicant.status === 'selected' ? 'selected' : 'notselected'}`}
                                 >
                                     {applicant.status === 'selected' ? 'Selected' : 'Not Selected'}

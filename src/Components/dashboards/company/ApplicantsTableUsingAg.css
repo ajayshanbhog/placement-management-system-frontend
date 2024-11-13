@@ -1,11 +1,21 @@
-/* ApplicantsTable.css */
-.ag-theme-alpine {
-    height: 400px;
-    width: 100%;
-    margin: 20px 0;
+.applicants-table {
+    padding: 20px;
+    max-width: 90%;
+    margin: auto;
 }
 
 .applicants-table h2 {
     text-align: center;
     margin-bottom: 20px;
+}
+
+.ag-grid-container {
+    height: 100%; /* Allow AG Grid to adjust its height */
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.ag-theme-alpine {
+    height: auto !important; /* Override AG Grid's default height */
+    width: 100%;
 }

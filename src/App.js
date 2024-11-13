@@ -6,9 +6,6 @@ import Home from './Components/Home';
 import Login from './Components/Login';
 import Register from './Components/Register';
 import Dashboard from './Components/Dashboard';
-//import CompanyDashboard from './Components/dashboards/CompanyDashboards';
-//import FacultyDashboard from './Components/dashboards/FacultyDashboard';
-//import StudentDashboard from './Components/dashboards/StudentDashboard';
 import Profile from './Components/Profile';
 import './App.css';
 
